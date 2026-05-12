@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# WebbPower one-shot dev launcher.
+#
+# Run this from any directory:
+#   ./bin/dev
+#
+# What it does on a fresh checkout:
+#   1. Installs Bun if missing.
+#   2. Installs node_modules.
+#   3. First time: runs `convex dev --once` interactively so you can
+#      log into Convex and provision the deployment on your personal team.
+#   4. Sets default Convex env vars (TBA_API_KEY, NT4_DEFAULT_HOST,
+#      BROWNOUT_THRESHOLD_V) if they aren't already set.
+#   5. Starts `convex dev` and `vite` in parallel with interleaved logs.
+#
+# Subsequent runs skip the one-time setup automatically.
+
+set -e
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO_DIR"
+
+if ! command -v bun >/dev/null 2>&1; then
+  if [ -x "$HOME/.bun/bin/bun" ]; then
+    export BUN_INSTALL="$HOME/.bun"
+    export PATH="$BUN_INSTALL/bin:$PATH"
+  else
+    echo "[webbpower] Bun not installed. Installing..."
+    curl -fsSL https://bun.sh/install | bash
+    export BUN_INSTALL="$HOME/.bun"
+    export PATH="$BUN_INSTALL/bin:$PATH"
+  fi
+fi
+
+if [ ! -d "node_modules" ] || [ ! -d "node_modules/convex" ]; then
+  echo "[webbpower] Installing dependencies..."
+  bun install
+fi
+
+GENERATED_API="convex/_generated/api.d.ts"
+if [ ! -f "$GENERATED_API" ] || [ ! -f ".env.local" ]; then
+  echo ""
+  echo "[webbpower] First-time Convex setup."
+  echo "[webbpower] A browser will open to log into Convex."
+  echo "[webbpower] Pick your PERSONAL team and create a new project named WebbPower."
+  echo ""
+  bunx convex dev --once
+fi
+
+# Seed Convex env vars (idempotent — convex env set replaces).
+set_env_if_missing() {
+  local key="$1"
+  local default_val="$2"
+  if ! bunx convex env get "$key" >/dev/null 2>&1; then
+    echo "[webbpower] Setting Convex env $key"
+    bunx convex env set "$key" "$default_val" >/dev/null
+  fi
+}
+
+set_env_if_missing TBA_API_KEY "vniP6u9DZ4nl15XPoKS9dd0x0X4GJ9PyEkJTkL7tuhvlz6cHgb6cdXfl3qgHeDbn"
+set_env_if_missing NT4_DEFAULT_HOST "roborio-1466-frc.local"
+set_env_if_missing BROWNOUT_THRESHOLD_V "6.75"
+
+echo "[webbpower] Starting convex dev + vite in parallel..."
+exec bun run dev:parallel

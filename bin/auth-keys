@@ -1,0 +1,58 @@
+#!/usr/bin/env bun
+// Generate JWT keys for Convex Auth and try to push them via the CLI.
+// Falls back to writing them to .auth-keys.local so you can paste into the
+// Convex dashboard at https://dashboard.convex.dev → Settings → Environment Variables.
+import { generateKeyPair, exportPKCS8, exportJWK } from "jose";
+import { spawnSync } from "node:child_process";
+import { writeFileSync } from "node:fs";
+
+const { publicKey, privateKey } = await generateKeyPair("RS256", {
+  extractable: true,
+});
+const pkcs8 = (await exportPKCS8(privateKey)).trimEnd();
+const jwk = await exportJWK(publicKey);
+(jwk as Record<string, unknown>).use = "sig";
+const jwks = JSON.stringify({ keys: [jwk] });
+const siteUrl = "http://localhost:5173";
+
+function trySet(key: string, value: string): boolean {
+  const r = spawnSync("bunx", ["convex", "env", "set", key, value], {
+    stdio: ["ignore", "pipe", "pipe"],
+    encoding: "utf8",
+  });
+  if (r.status === 0) {
+    console.log(`✓ ${key} pushed to Convex`);
+    return true;
+  }
+  console.log(`✗ Could not set ${key} via CLI: ${(r.stderr || r.stdout || "").trim()}`);
+  return false;
+}
+
+const okPrivate = trySet("JWT_PRIVATE_KEY", pkcs8);
+const okJwks = trySet("JWKS", jwks);
+const okSite = trySet("SITE_URL", siteUrl);
+
+if (okPrivate && okJwks && okSite) {
+  console.log("\nDone. Restart `./bin/dev` and try sign-up again.");
+  process.exit(0);
+}
+
+// Fallback: write the values to a file the user can paste from.
+const out = [
+  "# Convex Auth env vars — paste each into the Convex dashboard:",
+  "#   https://dashboard.convex.dev → your project → Settings → Environment Variables",
+  "",
+  "JWT_PRIVATE_KEY=",
+  pkcs8,
+  "",
+  "JWKS=",
+  jwks,
+  "",
+  "SITE_URL=",
+  siteUrl,
+  "",
+].join("\n");
+writeFileSync(".auth-keys.local", out, "utf8");
+console.log("\nWrote keys to .auth-keys.local");
+console.log("Open the file and paste each value into the Convex dashboard.");
+console.log("Then restart `./bin/dev`.");
