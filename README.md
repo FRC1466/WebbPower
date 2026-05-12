@@ -13,7 +13,11 @@ A diagnostic dashboard for FRC robot power — bus voltage, per-subsystem curren
 ## One command to run everything
 
 ```bash
-./bin/dev
+./bin/dev           # macOS / Linux
+```
+
+```powershell
+bin\dev             # Windows (cmd or PowerShell)
 ```
 
 That script:
@@ -23,9 +27,7 @@ That script:
 4. Seeds the Convex environment variables (`TBA_API_KEY`, `NT4_DEFAULT_HOST`, `BROWNOUT_THRESHOLD_V`).
 5. Starts `convex dev` and `vite` together with interleaved logs.
 
-After that, `./bin/dev` skips setup and just boots the dev loop. Same command from a fresh checkout on any machine.
-
-> Bash script; runs on macOS and Linux. On Windows, run `bun install && bun run dev:parallel` and complete `bunx convex dev --once` manually the first time.
+After that, the launcher skips setup and just boots the dev loop. Same command from a fresh checkout on any machine. The Windows launcher (`bin\dev.cmd` → `bin\dev.ps1`) mirrors the bash version exactly — no execution-policy fiddling required.
 
 ## What you must do on the first run
 

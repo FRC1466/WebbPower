@@ -77,21 +77,21 @@ export default function SubsystemsRoute() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Subsystems</h1>
-          <p className="text-sm text-muted-foreground">
+      <header className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-4">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Subsystems</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Map PDH/PDP channels to named subsystems with current limits.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Robot filter selector */}
           {robots && robots.length > 0 && (
             <Select
               value={activeRobotId ?? ""}
               onValueChange={(v) => setActiveRobotId(v || null)}
             >
-              <SelectTrigger className="w-40 h-8 text-sm">
+              <SelectTrigger className="h-9 w-full text-sm sm:h-8 sm:w-40">
                 <SelectValue>
                   {activeRobotId
                     ? robots.find((r) => r._id === activeRobotId)?.name ?? "Robot"
@@ -107,7 +107,7 @@ export default function SubsystemsRoute() {
             </Select>
           )}
           {isAdmin && (
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <TopicImportDialog robotId={activeRobotId ?? undefined} />
               <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger

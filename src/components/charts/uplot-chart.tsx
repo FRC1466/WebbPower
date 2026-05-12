@@ -43,16 +43,14 @@ export function UPlotChart({
     };
     plotRef.current?.destroy();
     plotRef.current = new uPlot(opts, data, ref.current);
-    const onResize = () => {
-      if (!ref.current || !plotRef.current) return;
-      plotRef.current.setSize({
-        width: ref.current.clientWidth,
-        height,
-      });
-    };
-    window.addEventListener("resize", onResize);
+    const el = ref.current;
+    const ro = new ResizeObserver(() => {
+      if (!plotRef.current || !el) return;
+      plotRef.current.setSize({ width: el.clientWidth, height });
+    });
+    ro.observe(el);
     return () => {
-      window.removeEventListener("resize", onResize);
+      ro.disconnect();
       plotRef.current?.destroy();
       plotRef.current = null;
     };

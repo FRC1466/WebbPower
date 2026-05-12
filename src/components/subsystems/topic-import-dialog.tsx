@@ -286,8 +286,10 @@ export function TopicImportDialog({
     >
       <DialogTrigger
         render={(props) => (
-          <Button {...props} variant="outline">
-            <FileSearch className="h-4 w-4" /> Import from log
+          <Button {...props} variant="outline" size="sm">
+            <FileSearch className="h-4 w-4" />
+            <span className="hidden sm:inline">Import from log</span>
+            <span className="sm:hidden">Import</span>
           </Button>
         )}
       />
@@ -331,7 +333,7 @@ export function TopicImportDialog({
                   {selected.size} selected
                 </span>
               </div>
-              <ScrollArea className="h-72 rounded-md border">
+              <ScrollArea className="h-48 rounded-md border sm:h-72">
                 <div className="py-1">
                   {[...tree.children.values()].map((child) => (
                     <TopicRow

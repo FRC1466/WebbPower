@@ -12,9 +12,6 @@ export type ActiveImport = {
 };
 
 type UiState = {
-  navOpen: boolean;
-  setNavOpen: (v: boolean) => void;
-  toggleNav: () => void;
   selectedBatteryId: string | null;
   setSelectedBatteryId: (id: string | null) => void;
   selectedMatchId: string | null;
@@ -37,9 +34,6 @@ type UiState = {
 };
 
 export const useUiStore = create<UiState>((set) => ({
-  navOpen: false,
-  setNavOpen: (v) => set({ navOpen: v }),
-  toggleNav: () => set((s) => ({ navOpen: !s.navOpen })),
   selectedBatteryId: null,
   setSelectedBatteryId: (id) => set({ selectedBatteryId: id }),
   selectedMatchId: null,

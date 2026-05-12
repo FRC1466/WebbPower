@@ -43,8 +43,11 @@ function VoltageGauge({
           : "var(--color-success)";
   return (
     <div className="space-y-2">
-      <div className="flex items-baseline justify-between">
-        <span className="text-5xl font-mono font-semibold" style={{ color }}>
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <span
+          className="text-4xl font-mono font-semibold tabular-nums sm:text-5xl"
+          style={{ color }}
+        >
           {formatVoltage(v)}
         </span>
         <span className="text-xs text-muted-foreground">
@@ -187,16 +190,16 @@ export default function LiveRoute() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-4">
-      <header className="flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
+      <header className="flex flex-wrap items-start justify-between gap-2 sm:items-end">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">
             Live dashboard
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Real-time bus voltage, per-subsystem current, brownout warnings.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Badge variant={connected ? "success" : "outline"}>
             {connected ? (
               <Wifi className="mr-1 h-3 w-3" />
@@ -217,7 +220,7 @@ export default function LiveRoute() {
           <AlertTitle>
             Viewing — capture device is {lock.deviceLabel}
           </AlertTitle>
-          <AlertDescription className="flex items-center justify-between gap-2">
+          <AlertDescription className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
             <span>Another device is currently capturing live data.</span>
             {canWrite && (
               <Button size="sm" onClick={() => startCapturing(true)}>
@@ -232,7 +235,7 @@ export default function LiveRoute() {
         <Alert>
           <Zap className="h-4 w-4" />
           <AlertTitle>No capture running</AlertTitle>
-          <AlertDescription className="flex items-center justify-between gap-2">
+          <AlertDescription className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
             <span>Connect to {cfg?.nt4Host ?? "the robot"} and start capturing.</span>
             <Button size="sm" onClick={() => startCapturing(false)}>
               Start capture

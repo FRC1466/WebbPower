@@ -195,8 +195,12 @@ export default defineSchema({
     matchId: v.optional(v.id("matches")),
     occurredAt: v.number(),
     dedupeKey: v.optional(v.string()),
+    resolvedAt: v.optional(v.number()),
+    resolvedReason: v.optional(v.string()),
+    resolvedByUserId: v.optional(v.id("users")),
   })
     .index("by_occurred", ["occurredAt"])
     .index("by_session", ["sessionId"])
+    .index("by_battery", ["batteryId"])
     .index("by_dedupe", ["dedupeKey"]),
 });

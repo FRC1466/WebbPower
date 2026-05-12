@@ -263,8 +263,8 @@ export default function ImportRoute() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Log import</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Log import</h1>
+        <p className="text-xs text-muted-foreground sm:text-sm">
           Upload one or more .dslog / .wpilog files. Each parses in its own Web Worker — you
           can navigate away and imports will keep going.
         </p>
@@ -272,10 +272,10 @@ export default function ImportRoute() {
 
       {/* Event selector */}
       {events && events.length > 0 && (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
           <Label className="shrink-0">Event</Label>
           <Select value={activeEventId ?? ""} onValueChange={(val) => setActiveEventId(val || null)}>
-            <SelectTrigger className="w-56">
+            <SelectTrigger className="w-full sm:w-56">
               <SelectValue>
                 {activeEventId
                   ? events.find((e) => e._id === activeEventId)?.name ?? "Select event"
@@ -306,7 +306,7 @@ export default function ImportRoute() {
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={[
-          "w-full rounded-xl border-2 border-dashed transition-colors p-10 flex flex-col items-center gap-3 cursor-pointer text-center",
+          "w-full rounded-xl border-2 border-dashed transition-colors p-6 sm:p-10 flex flex-col items-center gap-3 cursor-pointer text-center",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           "disabled:cursor-not-allowed disabled:opacity-50",
           dragging

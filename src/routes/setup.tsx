@@ -65,8 +65,8 @@ export default function SetupRoute() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Setup</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Setup</h1>
+        <p className="text-xs text-muted-foreground sm:text-sm">
           Event, robot and capture configuration. Admin only.
         </p>
       </header>
@@ -286,10 +286,10 @@ export default function SetupRoute() {
                     </div>
                   </div>
                 ) : (
-                  <div key={r._id} className="flex items-center justify-between rounded-lg border px-3 py-2">
-                    <div>
+                  <div key={r._id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2">
+                    <div className="min-w-0">
                       <p className="font-medium text-sm">{r.name}</p>
-                      <p className="text-xs text-muted-foreground">{r.pdType} · {r.nt4Host} · brownout {r.brownoutThreshold}V</p>
+                      <p className="break-words text-xs text-muted-foreground">{r.pdType} · {r.nt4Host} · brownout {r.brownoutThreshold}V</p>
                     </div>
                     {isAdmin && (
                       <div className="flex gap-1">
@@ -404,10 +404,10 @@ export default function SetupRoute() {
                     </div>
                   </div>
                 ) : (
-                  <div key={ev._id} className="flex items-center justify-between rounded-lg border px-3 py-2">
-                    <div>
+                  <div key={ev._id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2">
+                    <div className="min-w-0">
                       <p className="font-medium text-sm">{ev.name}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="break-words text-xs text-muted-foreground">
                         {robots?.find((r) => r._id === ev.robotId)?.name ?? "Unknown robot"}
                         {ev.tbaEventKey && ` · ${ev.tbaEventKey}`}
                       </p>

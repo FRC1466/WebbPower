@@ -16,21 +16,30 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "robots.txt"],
+      includeAssets: ["favicon.svg", "apple-touch-icon.svg", "robots.txt"],
       manifest: {
+        id: "/",
         name: "WebbPower",
         short_name: "WebbPower",
         description: "FRC power diagnostic dashboard",
         theme_color: "#0a0a0a",
         background_color: "#0a0a0a",
         display: "standalone",
+        orientation: "portrait",
         start_url: "/",
+        scope: "/",
         icons: [
           {
             src: "/favicon.svg",
             sizes: "any",
             type: "image/svg+xml",
             purpose: "any",
+          },
+          {
+            src: "/apple-touch-icon.svg",
+            sizes: "180x180",
+            type: "image/svg+xml",
+            purpose: "maskable",
           },
         ],
       },

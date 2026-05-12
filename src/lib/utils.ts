@@ -34,3 +34,18 @@ export function formatDateTime(ms: number | undefined): string {
   if (!ms) return "—";
   return new Date(ms).toLocaleString();
 }
+
+export function formatRelativeTime(ms: number | undefined, now = Date.now()): string {
+  if (!ms) return "—";
+  const diff = now - ms;
+  if (diff < 0) return "just now";
+  const sec = Math.floor(diff / 1000);
+  if (sec < 45) return "just now";
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min} min ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr} h ago`;
+  const day = Math.floor(hr / 24);
+  if (day < 7) return `${day} d ago`;
+  return new Date(ms).toLocaleDateString();
+}

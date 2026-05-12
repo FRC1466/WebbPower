@@ -152,9 +152,11 @@ export default function MatchDetailRoute() {
       <div className="flex items-center justify-between gap-2">
         <Link
           to="/matches"
-          className="-ml-2 inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-accent/40 hover:text-foreground"
+          className="-ml-2 inline-flex min-h-[2.25rem] items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-accent/40 hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to matches
+          <ArrowLeft className="h-4 w-4" />
+          <span className="hidden sm:inline">Back to matches</span>
+          <span className="sm:hidden">Back</span>
         </Link>
         {isAdmin && (
           <Button
@@ -163,14 +165,15 @@ export default function MatchDetailRoute() {
             className="text-destructive hover:text-destructive"
             onClick={() => setConfirmDelete(true)}
           >
-            <Trash2 className="h-4 w-4" /> Delete
+            <Trash2 className="h-4 w-4" />
+            <span className="hidden sm:inline">Delete</span>
           </Button>
         )}
       </div>
 
-      <header className="flex flex-wrap items-end justify-between gap-2">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">{s.label}</h1>
+      <header className="flex flex-wrap items-start justify-between gap-3 sm:items-end">
+        <div className="min-w-0 space-y-1">
+          <h1 className="break-words text-xl font-semibold tracking-tight sm:text-2xl">{s.label}</h1>
           <div className="flex flex-wrap gap-2 text-sm">
             <Badge variant="outline">{s.source}</Badge>
             {data.match && (
@@ -226,13 +229,14 @@ export default function MatchDetailRoute() {
           <CardTitle>Bus voltage</CardTitle>
           <CardDescription>Drag to zoom · Double-click to reset</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-2 sm:px-6">
           {voltageData ? (
             <ModeChart
               data={voltageData}
               modeSegments={modeSegments}
               series={[{ label: "V", stroke: "oklch(0.696 0.17 162.48)" }]}
               yLabel="Volts"
+              mobileHeight={180}
               height={220}
             />
           ) : (
@@ -245,7 +249,7 @@ export default function MatchDetailRoute() {
         <CardHeader>
           <CardTitle>Current per subsystem</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-2 sm:px-6">
           {currentData ? (
             <ModeChart
               data={[currentData.xs, ...currentData.ys] as any}
@@ -255,6 +259,7 @@ export default function MatchDetailRoute() {
                 stroke: `hsl(${(i * 53) % 360} 70% 55%)`,
               }))}
               yLabel="Amps"
+              mobileHeight={220}
               height={300}
             />
           ) : (

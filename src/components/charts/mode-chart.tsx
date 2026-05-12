@@ -18,12 +18,14 @@ export function ModeChart({
   series,
   modeSegments = [],
   height = 240,
+  mobileHeight,
   yLabel,
 }: {
   data: AlignedData;
   series: { label: string; stroke?: string; fill?: string }[];
   modeSegments?: ModeSegment[];
   height?: number;
+  mobileHeight?: number;
   yLabel?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,6 +34,13 @@ export function ModeChart({
   segsRef.current = modeSegments;
   const { resolvedTheme } = useTheme();
   const dark = resolvedTheme === "dark";
+
+  // Pick a height based on container width — touch screens get the smaller value.
+  const resolveHeight = useCallback(() => {
+    if (mobileHeight == null) return height;
+    const w = containerRef.current?.clientWidth ?? window.innerWidth;
+    return w < 640 ? mobileHeight : height;
+  }, [height, mobileHeight]);
 
   const resetZoom = useCallback(() => {
     const u = plotRef.current;
@@ -48,7 +57,7 @@ export function ModeChart({
 
     const opts: Options = {
       width: containerRef.current.clientWidth,
-      height,
+      height: resolveHeight(),
       cursor: {
         drag: { x: true, y: false, setScale: true },
       },
@@ -90,22 +99,27 @@ export function ModeChart({
       },
     };
     plotRef.current = new uPlot(opts, data, containerRef.current);
-  }, [dark, height, yLabel, series.map((s) => s.label).join()]);
+  }, [dark, resolveHeight, yLabel, series.map((s) => s.label).join()]);
 
-  // Rebuild plot when theme/config changes.
+  // Rebuild plot when theme/config changes; ResizeObserver keeps width in sync.
   useEffect(() => {
     buildPlot();
-    const onResize = () => {
-      if (!containerRef.current || !plotRef.current) return;
-      plotRef.current.setSize({ width: containerRef.current.clientWidth, height });
-    };
-    window.addEventListener("resize", onResize);
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      if (!plotRef.current || !el) return;
+      plotRef.current.setSize({
+        width: el.clientWidth,
+        height: resolveHeight(),
+      });
+    });
+    ro.observe(el);
     return () => {
-      window.removeEventListener("resize", onResize);
+      ro.disconnect();
       plotRef.current?.destroy();
       plotRef.current = null;
     };
-  }, [buildPlot]);
+  }, [buildPlot, resolveHeight]);
 
   // Update data without rebuilding.
   useEffect(() => {
