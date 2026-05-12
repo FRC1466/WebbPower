@@ -149,7 +149,30 @@ export const addMeasurement = mutation({
       lastInternalResistance: args.internalResistance,
       healthScore: score,
     });
-    // Critical alert for low health.
+    // Auto-resolve any open health alerts whose underlying condition has
+    // recovered. A new measurement is the only event that can change health,
+    // so this is the right place to sweep.
+    const openAlerts = await ctx.db
+      .query("alerts")
+      .withIndex("by_battery", (q: any) => q.eq("batteryId", args.batteryId))
+      .filter((q: any) => q.eq(q.field("resolvedAt"), undefined))
+      .collect();
+    for (const a of openAlerts) {
+      const recovered =
+        (a.kind === "battery_health_low" && score != null && score >= 30) ||
+        (a.kind === "battery_health_questionable" &&
+          score != null &&
+          score >= 50);
+      if (recovered) {
+        await ctx.db.patch(a._id, {
+          resolvedAt: Date.now(),
+          resolvedReason: `Recovered (health ${score})`,
+          resolvedByUserId: userId,
+        });
+      }
+    }
+
+    // Emit fresh alerts when the new measurement crosses a bad threshold.
     if (score != null && score < 30) {
       await ctx.db.insert("alerts", {
         severity: "critical",

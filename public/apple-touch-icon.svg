@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <!-- Solid background fills the entire icon (iOS may apply a rounded mask). -->
+  <rect width="180" height="180" fill="#0a0a0a"/>
+  <!-- Lightning bolt centered in the ~80% safe area Apple recommends. -->
+  <path d="M104 30 L48 110 H88 L72 150 L140 70 H100 Z" fill="#fbbf24"/>
+</svg>
