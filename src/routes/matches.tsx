@@ -69,8 +69,8 @@ export default function MatchesRoute() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Matches</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Matches</h1>
+        <p className="text-xs text-muted-foreground sm:text-sm">
           Every imported and captured session. Click to see voltage and
           subsystem current detail.
         </p>

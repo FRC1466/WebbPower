@@ -82,8 +82,10 @@ export function SessionTagger({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={(props) => (
-          <Button {...props} variant="outline" size="sm">
-            <Pencil className="h-4 w-4" /> Tag battery & match
+          <Button {...props} variant="outline" size="sm" className="shrink-0">
+            <Pencil className="h-4 w-4" />
+            <span className="hidden sm:inline">Tag battery & match</span>
+            <span className="sm:hidden">Tag</span>
           </Button>
         )}
       />

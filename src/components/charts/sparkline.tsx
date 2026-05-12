@@ -33,9 +33,10 @@ export function Sparkline({
 
   return (
     <svg
-      width={width}
+      className="w-full"
       height={height}
       viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="none"
       role="img"
       aria-labelledby={id}
     >
@@ -47,6 +48,7 @@ export function Sparkline({
         strokeWidth="2"
         strokeLinejoin="round"
         strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
       />
     </svg>
   );

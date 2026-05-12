@@ -34,14 +34,14 @@ export default function AlertsRoute() {
 
   return (
     <div className="space-y-4">
-      <header className="flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Alerts</h1>
-          <p className="text-sm text-muted-foreground">
+      <header className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Alerts</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Brownouts, current-limit violations, battery health drops.
           </p>
         </div>
-        <div className="w-48">
+        <div className="w-full sm:w-48">
           <Select value={severity} onValueChange={setSeverity}>
             <SelectTrigger>
               <SelectValue />
@@ -67,12 +67,12 @@ export default function AlertsRoute() {
             </p>
           )}
           {filtered.map((a) => (
-            <div key={a._id} className="flex items-center gap-3 py-2">
-              <Badge variant={SEVERITY_VARIANT[a.severity]}>
+            <div key={a._id} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2">
+              <Badge variant={SEVERITY_VARIANT[a.severity]} className="shrink-0">
                 {a.severity}
               </Badge>
-              <div className="flex-1">
-                <div className="text-sm font-medium">{a.message}</div>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-medium break-words">{a.message}</div>
                 <div className="text-xs text-muted-foreground">
                   {a.kind} — {formatDateTime(a.occurredAt)}
                 </div>
@@ -80,7 +80,7 @@ export default function AlertsRoute() {
               {a.sessionId && (
                 <Link
                   to={`/matches/${a.sessionId}`}
-                  className="text-xs text-primary underline"
+                  className="shrink-0 text-xs text-primary underline"
                 >
                   match
                 </Link>

@@ -5,7 +5,6 @@ import {
   BarChart3,
   Bell,
   ListChecks,
-  Menu,
   Upload,
   Zap,
   ChevronDown,
@@ -18,12 +17,6 @@ import { api } from "@convex/_generated/api";
 import { useUiStore } from "@/store/ui";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -78,17 +71,17 @@ function RobotEventPicker() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={(props) => (
-          <Button {...props} variant="outline" size="sm" className="h-7 gap-1.5 px-2 text-xs">
-            <Bot className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="max-w-[80px] truncate font-medium">{robot?.name ?? "No robot"}</span>
+          <Button {...props} variant="outline" size="sm" className="h-8 gap-1 px-2 text-xs sm:h-7 sm:gap-1.5">
+            <Bot className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <span className="max-w-[72px] truncate font-medium sm:max-w-[100px]">{robot?.name ?? "No robot"}</span>
             {event && (
               <>
-                <span className="text-muted-foreground">/</span>
-                <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="max-w-[80px] truncate">{event.name}</span>
+                <span className="hidden text-muted-foreground sm:inline">/</span>
+                <CalendarDays className="hidden h-3.5 w-3.5 shrink-0 text-muted-foreground sm:inline-block" />
+                <span className="hidden max-w-[100px] truncate sm:inline">{event.name}</span>
               </>
             )}
-            <ChevronDown className="h-3 w-3 text-muted-foreground" />
+            <ChevronDown className="h-3 w-3 shrink-0 text-muted-foreground" />
           </Button>
         )}
       />
@@ -143,8 +136,6 @@ function RobotEventPicker() {
 }
 
 export function AppShell() {
-  const navOpen = useUiStore((s) => s.navOpen);
-  const setNavOpen = useUiStore((s) => s.setNavOpen);
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoading, isAuthenticated } = useConvexAuth();
@@ -157,60 +148,20 @@ export function AppShell() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="flex h-full min-h-screen items-center justify-center">
+      <div className="flex min-h-screen-dvh items-center justify-center">
         <Skeleton className="h-32 w-64" />
       </div>
     );
   }
 
   return (
-    <div className="flex h-full min-h-screen flex-col bg-background text-foreground">
-      <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-md">
-        <Sheet open={navOpen} onOpenChange={setNavOpen}>
-          <SheetTrigger
-            render={(props) => (
-              <Button
-                {...props}
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label="Open menu"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            )}
-          />
-          <SheetContent side="left" className="w-64 p-4">
-            <SheetTitle className="mb-4 flex items-center gap-2">
-              <Zap className="h-5 w-5 text-warning" /> WebbPower
-            </SheetTitle>
-            <nav className="flex flex-col gap-1">
-              {NAV.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === "/"}
-                  onClick={() => setNavOpen(false)}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-accent text-accent-foreground"
-                        : "hover:bg-accent/50",
-                    )
-                  }
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
-          </SheetContent>
-        </Sheet>
-
+    <div className="flex min-h-screen-dvh flex-col bg-background text-foreground">
+      <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur-md pt-safe sm:px-4">
         <div className="flex items-center gap-2">
-          <Zap className="h-5 w-5 text-warning" />
-          <span className="text-base font-semibold tracking-tight">WebbPower</span>
+          <Zap className="h-5 w-5 shrink-0 text-warning" />
+          <span className="text-base font-semibold tracking-tight">
+            WebbPower
+          </span>
         </div>
 
         <nav className="ml-6 hidden flex-1 items-center gap-1 md:flex">
@@ -243,10 +194,36 @@ export function AppShell() {
 
       <main
         key={location.pathname}
-        className="flex-1 px-4 pb-16 pt-4 md:px-6 md:pb-6"
+        className="flex-1 px-3 pb-[calc(env(safe-area-inset-bottom,0px)+5rem)] pt-3 sm:px-4 sm:pt-4 md:px-6 md:pb-6"
       >
         <Outlet />
       </main>
+
+      {/* Mobile bottom tab bar — replaces the slide-out menu on small screens. */}
+      <nav
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t bg-background/95 backdrop-blur-md pb-safe md:hidden"
+        aria-label="Primary"
+      >
+        {NAV.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.to === "/"}
+            className={({ isActive }) =>
+              cn(
+                "flex min-h-[3.5rem] flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-[10px] font-medium leading-tight transition-colors",
+                isActive
+                  ? "text-primary"
+                  : "text-muted-foreground active:bg-accent/40",
+              )
+            }
+            aria-label={item.label}
+          >
+            <item.icon className="h-5 w-5" />
+            <span className="truncate">{item.label}</span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
   );
 }

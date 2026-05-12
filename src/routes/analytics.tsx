@@ -42,8 +42,8 @@ export default function AnalyticsRoute() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Analytics</h1>
+        <p className="text-xs text-muted-foreground sm:text-sm">
           Trends across sessions.
         </p>
       </header>
@@ -53,12 +53,12 @@ export default function AnalyticsRoute() {
           <CardTitle>Peak total current</CardTitle>
           <CardDescription>Per session over time (A)</CardDescription>
         </CardHeader>
-        <CardContent className="h-72">
+        <CardContent className="h-56 px-2 sm:h-72 sm:px-6">
           <ResponsiveContainer>
             <LineChart data={sessionTimeline}>
               <CartesianGrid stroke="rgba(127,127,127,0.2)" />
-              <XAxis dataKey="time" />
-              <YAxis />
+              <XAxis dataKey="time" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 11 }} width={36} />
               <Tooltip />
               <Line
                 type="monotone"
@@ -75,12 +75,12 @@ export default function AnalyticsRoute() {
         <CardHeader>
           <CardTitle>Brownouts per session</CardTitle>
         </CardHeader>
-        <CardContent className="h-72">
+        <CardContent className="h-56 px-2 sm:h-72 sm:px-6">
           <ResponsiveContainer>
             <BarChart data={sessionTimeline}>
               <CartesianGrid stroke="rgba(127,127,127,0.2)" />
-              <XAxis dataKey="time" />
-              <YAxis />
+              <XAxis dataKey="time" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 11 }} width={36} />
               <Tooltip />
               <Bar dataKey="brownouts" fill="var(--color-destructive)" />
             </BarChart>
@@ -92,14 +92,14 @@ export default function AnalyticsRoute() {
         <CardHeader>
           <CardTitle>Energy per session (kJ)</CardTitle>
         </CardHeader>
-        <CardContent className="h-72">
+        <CardContent className="h-56 px-2 sm:h-72 sm:px-6">
           <ResponsiveContainer>
             <LineChart data={sessionTimeline}>
               <CartesianGrid stroke="rgba(127,127,127,0.2)" />
-              <XAxis dataKey="time" />
-              <YAxis />
+              <XAxis dataKey="time" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 11 }} width={36} />
               <Tooltip />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
               <Line
                 type="monotone"
                 dataKey="energy"

@@ -10,16 +10,16 @@ export const SheetClose = BaseDialog.Close;
 export const SheetPortal = BaseDialog.Portal;
 
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-card p-6 shadow-lg border outline-none data-[starting-style]:translate-x-0 transition-transform duration-200",
+  "fixed z-50 gap-4 bg-card p-4 sm:p-6 shadow-lg border outline-none overflow-y-auto data-[starting-style]:translate-x-0 transition-transform duration-200",
   {
     variants: {
       side: {
-        top: "inset-x-0 top-0 border-b data-[starting-style]:-translate-y-full data-[ending-style]:-translate-y-full",
+        top: "inset-x-0 top-0 border-b max-h-[100dvh] data-[starting-style]:-translate-y-full data-[ending-style]:-translate-y-full",
         bottom:
-          "inset-x-0 bottom-0 border-t data-[starting-style]:translate-y-full data-[ending-style]:translate-y-full",
-        left: "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm data-[starting-style]:-translate-x-full data-[ending-style]:-translate-x-full",
+          "inset-x-0 bottom-0 border-t max-h-[100dvh] data-[starting-style]:translate-y-full data-[ending-style]:translate-y-full",
+        left: "inset-y-0 left-0 h-[100dvh] w-[85vw] max-w-xs border-r data-[starting-style]:-translate-x-full data-[ending-style]:-translate-x-full",
         right:
-          "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm data-[starting-style]:translate-x-full data-[ending-style]:translate-x-full",
+          "inset-y-0 right-0 h-[100dvh] w-[92vw] max-w-md border-l sm:max-w-sm data-[starting-style]:translate-x-full data-[ending-style]:translate-x-full",
       },
     },
     defaultVariants: { side: "right" },

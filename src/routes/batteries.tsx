@@ -43,10 +43,10 @@ export default function BatteriesRoute() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-end justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Batteries</h1>
-          <p className="text-sm text-muted-foreground">
+      <header className="flex flex-wrap items-start justify-between gap-2 sm:items-end">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Batteries</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Inventory and health for every battery in the rotation.
           </p>
         </div>
@@ -54,7 +54,7 @@ export default function BatteriesRoute() {
           <Dialog open={newOpen} onOpenChange={setNewOpen}>
             <DialogTrigger
               render={(props) => (
-                <Button {...props}>
+                <Button {...props} size="sm" className="shrink-0">
                   <Plus className="h-4 w-4" /> New battery
                 </Button>
               )}

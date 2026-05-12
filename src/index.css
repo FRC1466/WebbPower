@@ -97,11 +97,60 @@
   #root {
     height: 100%;
   }
+  html {
+    /* Honor iOS safe-area insets while still letting <html> fill the viewport. */
+    -webkit-text-size-adjust: 100%;
+  }
   body {
     background: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Prevent overscroll bouncing past the dashboard on mobile. */
+    overscroll-behavior-y: contain;
+  }
+  /* iOS Safari zooms when an input/select has font-size < 16px. Force ≥16px on touch devices. */
+  @media (max-width: 640px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+  /* Larger touch targets on coarse pointers. */
+  @media (pointer: coarse) {
+    button,
+    [role="button"],
+    a {
+      touch-action: manipulation;
+    }
+  }
+}
+
+@layer utilities {
+  /* Use 100dvh so mobile browser chrome doesn't clip the layout. */
+  .min-h-screen-dvh {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  /* iOS safe-area helpers. */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .px-safe {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+  /* Horizontal scroll without visible scrollbar (for tab strips on mobile). */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
 }
