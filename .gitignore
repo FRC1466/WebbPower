@@ -27,7 +27,6 @@ dist-ssr
 
 # Convex
 .convex
-convex/_generated/
 
 # Environment
 .env
