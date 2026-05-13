@@ -27,6 +27,8 @@ dist-ssr
 
 # Convex
 .convex
+convex/*.js
+convex/*.js.map
 
 # Environment
 .env
