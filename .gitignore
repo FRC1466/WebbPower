@@ -38,3 +38,4 @@ convex/_generated/
 dev-dist
 public/sw.js
 public/workbox-*.js
+.vercel

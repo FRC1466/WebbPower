@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useNavigate } from "react-router";
 import { Zap } from "lucide-react";
+import { useAction } from "convex/react";
+import { api } from "@convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +23,7 @@ export default function SignInRoute() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
   const [loading, setLoading] = useState(false);
+  const syncRole = useAction(api.users.syncRoleFromTeamDashboard);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -41,8 +44,10 @@ export default function SignInRoute() {
             const formData = new FormData(e.currentTarget);
             formData.set("flow", mode);
             setLoading(true);
-            try {
+              try {
               await signIn("password", formData);
+              // Sync role from team-1466 dashboard (no-ops if env vars absent)
+              await syncRole();
               navigate("/");
             } catch (err) {
               toast.error(
