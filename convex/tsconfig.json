@@ -4,8 +4,11 @@
    * You can modify it, but some settings are required to use Convex.
    */
   "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
     "allowJs": true,
     "strict": true,
+    "noImplicitAny": false,
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
     "skipLibCheck": true,
@@ -18,5 +21,6 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "isolatedModules": true
-  }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"]
 }
