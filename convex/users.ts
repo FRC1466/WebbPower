@@ -155,12 +155,11 @@ export const syncRoleFromTeamDashboard = action({
       if (data.status === "inactive" || data.status === "alumni") {
         return { synced: false, reason: "inactive" };
       }
-      // Respect team-1466's loginAccess gate.
+      // Only hard-block if login is explicitly disabled in team-1466.
+      // "pending" just means the team-1466 manager hasn't reviewed them yet —
+      // WebbPower manages its own access so we still sync the role.
       if (data.loginAccess === "disabled") {
         return { synced: false, reason: "login_disabled" };
-      }
-      if (data.loginAccess === "pending") {
-        return { synced: false, reason: "login_pending" };
       }
 
       const derivedRole = permissionToRole(data.permission);

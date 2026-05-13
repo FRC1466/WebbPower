@@ -26,8 +26,6 @@ const REASON_MESSAGES: Record<string, string> = {
     "Your team-1466 account is inactive or alumni. Contact a team admin.",
   login_disabled:
     "Your login access is disabled in the team-1466 dashboard. Contact a team admin to re-enable it.",
-  login_pending:
-    "Your login access is pending approval. Contact a team admin.",
 };
 
 export default function SignInRoute() {

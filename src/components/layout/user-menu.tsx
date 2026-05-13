@@ -36,7 +36,6 @@ export function UserMenu() {
           not_found: "Email not found in team dashboard.",
           inactive: "Account is inactive or alumni in team dashboard.",
           login_disabled: "Login access is disabled in team dashboard.",
-          login_pending: "Login access is pending in team dashboard.",
         };
         toast.warning(
           result.reason
