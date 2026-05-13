@@ -122,7 +122,7 @@ function permissionToRole(
  */
 export const syncRoleFromTeamDashboard = action({
   args: {},
-  handler: async (ctx): Promise<{ synced: boolean; role?: string }> => {
+  handler: async (ctx): Promise<{ synced: boolean; role?: string; reason?: string }> => {
     const dashboardUrl = process.env.TEAM_DASHBOARD_URL;
     const apiKey = process.env.TEAM_DASHBOARD_API_KEY;
     if (!dashboardUrl) return { synced: false };
@@ -147,12 +147,20 @@ export const syncRoleFromTeamDashboard = action({
         found: boolean;
         permission?: string;
         status?: string;
+        loginAccess?: string;
       };
 
-      if (!data.found || !data.permission) return { synced: false };
+      if (!data.found || !data.permission) return { synced: false, reason: "not_found" };
       // Don't auto-grant access to inactive/alumni members.
       if (data.status === "inactive" || data.status === "alumni") {
-        return { synced: false };
+        return { synced: false, reason: "inactive" };
+      }
+      // Respect team-1466's loginAccess gate.
+      if (data.loginAccess === "disabled") {
+        return { synced: false, reason: "login_disabled" };
+      }
+      if (data.loginAccess === "pending") {
+        return { synced: false, reason: "login_pending" };
       }
 
       const derivedRole = permissionToRole(data.permission);

@@ -1,7 +1,7 @@
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useQuery } from "convex/react";
+import { useQuery, useAction } from "convex/react";
 import { api } from "@convex/_generated/api";
-import { LogOut, User, Settings, Cpu } from "lucide-react";
+import { LogOut, User, Settings, Cpu, RefreshCw, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,11 +13,44 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
+import { useState } from "react";
+
+const TEAM_DASHBOARD_URL = import.meta.env.VITE_TEAM_DASHBOARD_URL as string | undefined;
 
 export function UserMenu() {
   const user = useQuery(api.users.currentUser);
   const { signOut } = useAuthActions();
   const navigate = useNavigate();
+  const syncRole = useAction(api.users.syncRoleFromTeamDashboard);
+  const [syncing, setSyncing] = useState(false);
+
+  async function handleResync() {
+    setSyncing(true);
+    try {
+      const result = await syncRole();
+      if (result.synced) {
+        toast.success(`Role synced: ${result.role} (from team dashboard)`);
+      } else {
+        const msgs: Record<string, string> = {
+          not_found: "Email not found in team dashboard.",
+          inactive: "Account is inactive or alumni in team dashboard.",
+          login_disabled: "Login access is disabled in team dashboard.",
+          login_pending: "Login access is pending in team dashboard.",
+        };
+        toast.warning(
+          result.reason
+            ? (msgs[result.reason] ?? "Role not synced.")
+            : "Role not synced — check TEAM_DASHBOARD_URL env var.",
+          { duration: 6000 },
+        );
+      }
+    } catch {
+      toast.error("Failed to sync role from team dashboard.");
+    } finally {
+      setSyncing(false);
+    }
+  }
 
   if (user === undefined) {
     return null;
@@ -71,6 +104,22 @@ export function UserMenu() {
             <DropdownMenuItem onClick={() => navigate("/setup")}>
               <Settings className="mr-2 h-4 w-4" /> Setup
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        {!user.isAnonymous && (
+          <>
+            <DropdownMenuItem onClick={handleResync} disabled={syncing}>
+              <RefreshCw className={`mr-2 h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+              Sync role from dashboard
+            </DropdownMenuItem>
+            {TEAM_DASHBOARD_URL && (
+              <DropdownMenuItem
+                onClick={() => window.open(TEAM_DASHBOARD_URL, "_blank", "noopener,noreferrer")}
+              >
+                <ExternalLink className="mr-2 h-4 w-4" /> Team dashboard
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
           </>
         )}
